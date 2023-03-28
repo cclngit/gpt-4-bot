@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 client.on('ready', () => {
-  //console.log('The bot is online!');
+  console.log('The bot is online!');
   client.channels.cache.get(process.env.LOG_CHANNEL_ID).send('The bot is online!');
 });
 
