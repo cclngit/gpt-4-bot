@@ -11,7 +11,8 @@ const client = new Client({
 });
 
 client.on('ready', () => {
-  console.log('The bot is online!');
+  //console.log('The bot is online!');
+  client.channels.cache.get(process.env.LOG_CHANNEL_ID).send('The bot is online!');
 });
 
 const configuration = new Configuration({
@@ -45,17 +46,25 @@ client.on('messageCreate', async (message) => {
 
     const result = await openai
       .createChatCompletion({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4',
         messages: conversationLog,
-        // max_tokens: 256, // limit token usage
+        max_tokens: 4000, // limit token usage
       })
       .catch((error) => {
         console.log(`OPENAI ERR: ${error}`);
+        client.channels.cache.get(process.env.LOG_CHANNEL_ID).send(`OPENAI ERR: ${error}`);
       });
 
     message.reply(result.data.choices[0].message);
   } catch (error) {
     console.log(`ERR: ${error}`);
+    //sensd console error to a oder discord channel
+
+    message.reply('Something went wrong!');
+
+    //send error to a discord channel
+    client.channels.cache.get(process.env.LOG_CHANNEL_ID).send(`ERR: ${error}`);
+
   }
 });
 
